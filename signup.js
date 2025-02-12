@@ -44,7 +44,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // If all checks pass
-        window.location.href = "https://dormdash1login.netlify.app/";
-        
+        alert("Signup successful! Redirecting to login...");
+        form.reset();
+
+        // Redirect after a small delay
+        setTimeout(() => {
+            window.location.href = "https://dormdash1login.netlify.app/";
+        }, 1000);
     });
 });
