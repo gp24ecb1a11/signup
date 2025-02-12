@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // If all checks pass
-        alert("Signup successful!");
+        window.location.href = "https://dormdash1login.netlify.app/";
         form.reset();
     });
 });
