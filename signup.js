@@ -4,7 +4,7 @@ const firebaseConfig = {
   authDomain: "dormdash-1becd.firebaseapp.com",
   databaseURL: "https://dormdash-1becd-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "dormdash-1becd",
-  storageBucket: "dormdash-1becd.appspot.com",
+  storageBucket: "dormdash-1becd.firebasestorage.app",
   messagingSenderId: "789434000901",
   appId: "1:789434000901:web:a8f28358c7e0091b2ede6c"
 };
