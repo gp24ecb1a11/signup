@@ -4,31 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-   <!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
-
-<!-- Initialize Firebase -->
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyC4mO00e7KPtyCYVgwgFuwfCP1n9hSvA44",
-    authDomain: "dormdash-6e970.firebaseapp.com",
-    projectId: "dormdash-6e970",
-    storageBucket: "dormdash-6e970.appspot.com",
-    messagingSenderId: "911104183529",
-    appId: "1:911104183529:web:27bcec5bb027937e683478"
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-</script>
-
-<!-- Your Custom JS -->
-<script src="signup.js" defer></script>
-<link rel="icon" href="data:,">
-
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+    <script src="signup.js" defer></script>
     <title>Sign Up - Dorm Dash</title>
 </head>
 <body>
@@ -54,27 +32,13 @@
             <!-- Sign Up Form -->
             <div class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
                 <h2 class="text-gray-900 text-lg font-medium title-font mb-5">Sign Up</h2>
-                <form id="signup-form" method="post">
-
-    <input type="text" id="full-name" name="full-name" placeholder="Full Name" required class="w-full bg-white rounded border border-gray-300 py-2 px-3 mb-4">
-    
-    <input type="text" id="mobile-number" name="mobile-number" placeholder="Mobile Number" required class="w-full bg-white rounded border border-gray-300 py-2 px-3 mb-4">
-    
-    <input type="file" id="id-card" name="id-card" required class="w-full bg-white rounded border border-gray-300 py-2 px-3 mb-4">
-    
-    <input type="email" id="email" name="email" placeholder="Email" required class="w-full bg-white rounded border border-gray-300 py-2 px-3 mb-4">
-    
-    <input type="text" id="username" name="username" placeholder="Username" required class="w-full bg-white rounded border border-gray-300 py-2 px-3 mb-4">
-    
-    <input type="password" id="password" name="password" placeholder="Create Password" required class="w-full bg-white rounded border border-gray-300 py-2 px-3 mb-4">
-    
-    <button type="submit" class="bg-indigo-500 text-white border-0 py-2 px-8 rounded text-lg hover:bg-indigo-600 w-full">
-        Sign Up
-    </button>
-</form>
-
-<p id="error-message" class="text-red-500 mt-2 text-center"></p>
-
+                <form id="signup-form">
+                    <input type="text" id="username" placeholder="Username" class="w-full bg-white rounded border border-gray-300 py-2 px-3 mb-4">
+                    <input type="password" id="password" placeholder="Create Password" class="w-full bg-white rounded border border-gray-300 py-2 px-3 mb-4">
+                    <button type="submit" class="bg-indigo-500 text-white border-0 py-2 px-8 rounded text-lg hover:bg-indigo-600 w-full">Sign Up</button>
+                </form>
+                <p id="error-message" class="text-red-500 mt-2 text-center"></p>
+                <p class="text-gray-600 mt-4 text-center">Already have an account? <a href="login.html" class="text-indigo-500">Log in</a></p>
             </div>
         </div>
     </section>
