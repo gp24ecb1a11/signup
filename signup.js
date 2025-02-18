@@ -1,4 +1,4 @@
-// Firebase Configuration
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDobwvOdyiwBCjNNBUyRNStwrMQmhFv3vY",
   authDomain: "dormdash-1becd.firebaseapp.com",
@@ -14,46 +14,67 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const database = firebase.database();
 
-// Handle Signup
+// Sign-Up Form Submission
 document.getElementById("signup-form").addEventListener("submit", function (event) {
-  event.preventDefault(); // ✅ Prevent form from submitting the default way
+  event.preventDefault(); // Prevent form from redirecting
 
-  // Get form values
+  // Get input values
   const fullName = document.getElementById("full-name").value;
   const mobileNumber = document.getElementById("mobile-number").value;
-  const idCard = document.getElementById("id-card").files[0]; // File upload
   const email = document.getElementById("email").value;
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
-  const errorMessage = document.getElementById("error-message");
+  const idCard = document.getElementById("id-card").files[0]; // File upload
 
-  // Validate Inputs
-  if (!fullName || !mobileNumber || !idCard || !email || !username || !password) {
-    errorMessage.innerText = "Please fill in all fields.";
+  // Validate inputs
+  if (!fullName || !mobileNumber || !email || !username || !password) {
+    alert("Please fill in all fields.");
     return;
   }
 
-  // Create user in Firebase Authentication
-  firebase.auth().createUserWithEmailAndPassword(email, password)
+  // Firebase Authentication - Create User
+  auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      
-      // Store additional user data in Realtime Database
-      return firebase.database().ref("users/" + user.uid).set({
-        fullName: fullName,
-        mobileNumber: mobileNumber,
-        email: email,
-        username: username
-      });
-    })
-    .then(() => {
-      errorMessage.innerText = "Signup successful! Redirecting...";
-      setTimeout(() => {
-        window.location.href = "https://dormdash1login.netlify.app/"; // Redirect to login
-      }, 2000);
+      const userId = user.uid;
+
+      // Upload ID Card to Firebase Storage
+      if (idCard) {
+        const storageRef = firebase.storage().ref("idCards/" + userId);
+        storageRef.put(idCard).then(snapshot => {
+          snapshot.ref.getDownloadURL().then(idCardURL => {
+            // Save User Data to Realtime Database
+            database.ref("users/" + userId).set({
+              fullName,
+              mobileNumber,
+              email,
+              username,
+              idCardURL
+            }).then(() => {
+              alert("Sign-Up Successful!");
+              window.location.href = "https://dormdash1login.netlify.app/"; // Redirect to login
+            }).catch(error => {
+              console.error("Error saving user data:", error);
+            });
+          });
+        });
+      } else {
+        // Save data without ID card
+        database.ref("users/" + userId).set({
+          fullName,
+          mobileNumber,
+          email,
+          username
+        }).then(() => {
+          alert("Sign-Up Successful!");
+          window.location.href = "https://dormdash1login.netlify.app/";
+        }).catch(error => {
+          console.error("Error saving user data:", error);
+        });
+      }
     })
     .catch((error) => {
-      errorMessage.innerText = error.message;
+      alert(error.message);
+      console.error(error);
     });
 });
-
