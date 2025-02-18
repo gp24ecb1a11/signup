@@ -16,7 +16,7 @@ const database = firebase.database();
 
 // Handle Signup
 document.getElementById("signup-form").addEventListener("submit", function (event) {
-  event.preventDefault();
+  event.preventDefault(); // ✅ Prevent form from submitting the default way
 
   // Get form values
   const fullName = document.getElementById("full-name").value;
@@ -34,18 +34,19 @@ document.getElementById("signup-form").addEventListener("submit", function (even
   }
 
   // Create user in Firebase Authentication
-  auth.createUserWithEmailAndPassword(email, password)
+  firebase.auth().createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       const user = userCredential.user;
       
       // Store additional user data in Realtime Database
-      database.ref("users/" + user.uid).set({
+      return firebase.database().ref("users/" + user.uid).set({
         fullName: fullName,
         mobileNumber: mobileNumber,
         email: email,
         username: username
       });
-
+    })
+    .then(() => {
       errorMessage.innerText = "Signup successful! Redirecting...";
       setTimeout(() => {
         window.location.href = "https://dormdash1login.netlify.app/"; // Redirect to login
@@ -55,3 +56,4 @@ document.getElementById("signup-form").addEventListener("submit", function (even
       errorMessage.innerText = error.message;
     });
 });
+
