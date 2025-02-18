@@ -35,8 +35,15 @@ document.getElementById("signup-form").addEventListener("submit", async function
 
   try {
     // Create User in Firebase Authentication
-    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-    const userId = userCredential.user.uid;
+    auth.createUserWithEmailAndPassword(email, password)
+  .then((userCredential) => {
+    console.log("User created successfully!", userCredential);
+  })
+  .catch((error) => {
+    console.error("Signup Error:", error.message);
+    alert(error.message);
+  });
+
 
     let idCardURL = "";
     if (idCard) {
