@@ -1,71 +1,58 @@
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDobwvOdyiwBCjNNBUyRNStwrMQmhFv3vY",
-  authDomain: "dormdash-1becd.firebaseapp.com",
-  databaseURL: "https://dormdash-1becd-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "dormdash-1becd",
-  storageBucket: "dormdash-1becd.firebasestorage.app",
-  messagingSenderId: "789434000901",
-  appId: "1:789434000901:web:a8f28358c7e0091b2ede6c"
+    apiKey: "AIzaSyC4mO00e7KPtyCYVgwgFuwfCP1n9hSvA44",
+    authDomain: "dormdash-6e970.firebaseapp.com",
+    projectId: "dormdash-6e970",
+    storageBucket: "dormdash-6e970.appspot.com",  // Fixed storageBucket
+    messagingSenderId: "911104183529",
+    appId: "1:911104183529:web:27bcec5bb027937e683478"
 };
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const database = firebase.database();
-const storage = firebase.storage(); // ✅ Add Storage Initialization
+const storage = firebase.storage();
 
-// Sign-Up Form Submission
-document.getElementById("signup-form").addEventListener("submit", async function (event) {
-  event.preventDefault(); // Prevent form from redirecting
+// Handle Sign-Up Form Submission
+document.getElementById("signup-form").addEventListener("submit", async (e) => {
+    e.preventDefault(); // Prevent form refresh
 
-  // Get input values
-  const fullName = document.getElementById("full-name").value;
-  const mobileNumber = document.getElementById("mobile-number").value;
-  const email = document.getElementById("email").value;
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-  const idCard = document.getElementById("id-card").files[0]; // File upload
+    const fullName = document.getElementById("full-name").value;
+    const mobileNumber = document.getElementById("mobile-number").value;
+    const email = document.getElementById("email").value;
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const idCard = document.getElementById("id-card").files[0];
 
-  // Validate inputs
-  if (!fullName || !mobileNumber || !email || !username || !password) {
-    alert("Please fill in all fields.");
-    return;
-  }
-
-  try {
-    // Create User in Firebase Authentication
-    auth.createUserWithEmailAndPassword(email, password)
-  .then((userCredential) => {
-    console.log("User created successfully!", userCredential);
-  })
-  .catch((error) => {
-    console.error("Signup Error:", error.message);
-    alert(error.message);
-  });
-
-
-    let idCardURL = "";
-    if (idCard) {
-      // Upload ID Card to Firebase Storage
-      const storageRef = storage.ref(`idCards/${userId}`);
-      const snapshot = await storageRef.put(idCard);
-      idCardURL = await snapshot.ref.getDownloadURL();
+    if (!fullName || !mobileNumber || !email || !username || !password || !idCard) {
+        document.getElementById("error-message").innerText = "All fields are required!";
+        return;
     }
 
-    // Save User Data to Realtime Database
-    await database.ref("users/" + userId).set({
-      fullName,
-      mobileNumber,
-      email,
-      username,
-      idCardURL
-    });
+    try {
+        // Create user in Firebase Authentication
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
 
-    alert("Sign-Up Successful!");
-    window.location.href = "https://dormdash1login.netlify.app/"; // ✅ Correct redirect
-  } catch (error) {
-    alert(error.message);
-    console.error("Signup Error:", error);
-  }
+        // Upload ID Card to Firebase Storage
+        const idCardRef = storage.ref(`idCards/${user.uid}`);
+        await idCardRef.put(idCard);
+        const idCardURL = await idCardRef.getDownloadURL();
+
+        // Store additional user info in Firebase Realtime Database
+        await database.ref("users/" + user.uid).set({
+            fullName,
+            mobileNumber,
+            email,
+            username,
+            idCardURL
+        });
+
+        alert("Sign-up successful! Redirecting to login...");
+        window.location.href = "login.html"; // Redirect after successful sign-up
+
+    } catch (error) {
+        document.getElementById("error-message").innerText = error.message;
+    }
 });
