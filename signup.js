@@ -13,9 +13,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const database = firebase.database();
+const storage = firebase.storage(); // ✅ Add Storage Initialization
 
 // Sign-Up Form Submission
-document.getElementById("signup-form").addEventListener("submit", function (event) {
+document.getElementById("signup-form").addEventListener("submit", async function (event) {
   event.preventDefault(); // Prevent form from redirecting
 
   // Get input values
@@ -32,49 +33,32 @@ document.getElementById("signup-form").addEventListener("submit", function (even
     return;
   }
 
-  // Firebase Authentication - Create User
-  auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      const userId = user.uid;
+  try {
+    // Create User in Firebase Authentication
+    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+    const userId = userCredential.user.uid;
 
+    let idCardURL = "";
+    if (idCard) {
       // Upload ID Card to Firebase Storage
-      if (idCard) {
-        const storageRef = firebase.storage().ref("idCards/" + userId);
-        storageRef.put(idCard).then(snapshot => {
-          snapshot.ref.getDownloadURL().then(idCardURL => {
-            // Save User Data to Realtime Database
-            database.ref("users/" + userId).set({
-              fullName,
-              mobileNumber,
-              email,
-              username,
-              idCardURL
-            }).then(() => {
-              alert("Sign-Up Successful!");
-              window.location.href = "https://dormdash1login.netlify.app/"; // Redirect to login
-            }).catch(error => {
-              console.error("Error saving user data:", error);
-            });
-          });
-        });
-      } else {
-        // Save data without ID card
-        database.ref("users/" + userId).set({
-          fullName,
-          mobileNumber,
-          email,
-          username
-        }).then(() => {
-          alert("Sign-Up Successful!");
-          window.location.href = "https://dormdash1login.netlify.app/";
-        }).catch(error => {
-          console.error("Error saving user data:", error);
-        });
-      }
-    })
-    .catch((error) => {
-      alert(error.message);
-      console.error(error);
+      const storageRef = storage.ref(`idCards/${userId}`);
+      const snapshot = await storageRef.put(idCard);
+      idCardURL = await snapshot.ref.getDownloadURL();
+    }
+
+    // Save User Data to Realtime Database
+    await database.ref("users/" + userId).set({
+      fullName,
+      mobileNumber,
+      email,
+      username,
+      idCardURL
     });
+
+    alert("Sign-Up Successful!");
+    window.location.href = "https://dormdash1login.netlify.app/"; // ✅ Correct redirect
+  } catch (error) {
+    alert(error.message);
+    console.error("Signup Error:", error);
+  }
 });
