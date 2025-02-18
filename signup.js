@@ -50,7 +50,7 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
         });
 
         alert("Sign-up successful! Redirecting to login...");
-        window.location.href = "login.html"; // Redirect after successful sign-up
+        window.location.href = "https://dormdash1login.netlify.app/"; // Redirect after successful sign-up
 
     } catch (error) {
         document.getElementById("error-message").innerText = error.message;
