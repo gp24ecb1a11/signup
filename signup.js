@@ -48,7 +48,9 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
             idCard: idCardBase64,
         });
 
-        alert("Sign-up successful! ID card saved in Firestore.");
+        alert("Sign-up successful! Redirecting to login...");
+        window.location.href = "https://dormdash1login.netlify.app/"; // Redirect to login page after successful sign-up
+
     } catch (error) {
         alert(error.message);
     }
